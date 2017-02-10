@@ -5,7 +5,6 @@ import random
 import hashlib
 import hmac
 
-
 import webapp2
 import jinja2
 
@@ -135,7 +134,7 @@ class Post(db.Expando):
         return render_str("post.html", p=self)
 
 
-# Comment Data Model
+# Data Model for the comment
 class Comment(db.Model):
     """
     The Comment object has four attributes, which are:
@@ -262,8 +261,7 @@ class PostPage(BlogHandler):
     def get(self, post_id):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         if not post:
-            self.error(404)
-            return
+            self.render("not_found.html")
         else:
             self.render("permalink.html", post=post, user=self.user)
 
@@ -276,13 +274,13 @@ class NewPost(BlogHandler):
             # We render a form for adding new post
             self.render("newpost.html")
         else:
-            self.redirect("/login")
+            return self.redirect("/login")
 
     def post(self):
         # When sending the form to create a new post,
         # we still check if user is logged in
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
 
         subject = self.request.get('subject')
         content = self.request.get('content')
@@ -296,7 +294,7 @@ class NewPost(BlogHandler):
                         like_count=0,
                         like_users=[])
             post.put()
-            self.redirect('/blog/%s' % str(post.key().id()))
+            return self.redirect('/blog/%s' % str(post.key().id()))
         else:
             error = "Subject and content, please!"
             self.render("newpost.html",
@@ -352,7 +350,7 @@ class DeletePost(BlogHandler):
                 comment.delete()
             # then delete the post itself
             post.delete()
-            self.redirect('/blog')
+            return self.redirect('/blog')
 
 
 # Route Handler for Liking a post
@@ -361,10 +359,10 @@ class LikePost(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         # user needs to log in before liking a post
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
         # cannot find this post, redirect to front page
         elif not post:
-            self.redirect('/blog')
+            return self.redirect('/blog')
         # user is logged in and we found the post
         else:
             # this user is the author of the post
@@ -386,7 +384,7 @@ class LikePost(BlogHandler):
                 post.like_count += 1
                 post.like_users.append(self.user.name)
                 post.put()
-                self.redirect("/blog/%s" % str(post_id))
+                return self.redirect("/blog/%s" % str(post_id))
 
 
 # Route Handler for disliking a post
@@ -395,10 +393,10 @@ class UnlikePost(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         # user needs to log in before liking a post
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
         # cannot find this post, redirect to front page
         elif not post:
-            self.redirect('/blog')
+            return self.redirect('/blog')
         # user is logged in and we found the post
         else:
             # this user hasn't liked the post, so he cannot unlike it
@@ -410,7 +408,7 @@ class UnlikePost(BlogHandler):
                 post.like_count -= 1
                 post.like_users.remove(self.user.name)
                 post.put()
-                self.redirect("/blog/%s" % str(post_id))
+                return self.redirect("/blog/%s" % str(post_id))
 
 
 # Route Handler for adding a new comment to a post
@@ -420,9 +418,9 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         # user needs to log in and post needs to be valid
         if not self.user:
-            self.redirect('/login')
+            return self.redirect('/login')
         elif not post:
-            self.redirect('/blog')
+            return self.redirect('/blog')
         else:
             # everything is fine, we render the form for adding a comment
             self.render("newcomment.html", post_id=int(post_id))
@@ -431,7 +429,7 @@ class NewComment(BlogHandler):
         post = Post.get_by_id(int(post_id), parent=blog_key())
         # make sure post is found and user is logged in
         if not self.user or not post:
-            self.redirect('/blog')
+            return self.redirect('/blog')
         else:
             text = self.request.get("text")
             # make sure comment text is not empty
@@ -445,7 +443,7 @@ class NewComment(BlogHandler):
                                   user_name=user_name,
                                   text=text)
                 comment.put()
-                self.redirect('/blog/%s' % str(post_id))
+                return self.redirect('/blog/%s' % str(post_id))
 
 
 # Route Handler for editing a comment
@@ -474,7 +472,7 @@ class EditComment(BlogHandler):
             else:
                 comment.text = text
                 comment.put()
-                self.redirect('/blog/%s' % str(post_id))
+                return self.redirect('/blog/%s' % str(post_id))
 
 
 # Route Handler for deleting a comment
@@ -486,7 +484,7 @@ class DeleteComment(BlogHandler):
         if self.check_comment_ownership(post, comment):
             # only allow deleting when the current user owns the comment
             comment.delete()
-            self.redirect('/blog/%s' % str(post_id))
+            return self.redirect('/blog/%s' % str(post_id))
 
 
 # Route Handler for signing up the user, it will be inherited by Register class
