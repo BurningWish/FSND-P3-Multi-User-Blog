@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+      <h2 class="comment-form-title">Edit this comment</h2>
+      <form method="POST">
+        <div class="form-group">
+          <textarea class="form-control" name="text" placeholder="Feel free to drop anything here">{{text}}</textarea>
+        </div>
+        <p class="error">{{error}}</p>
+        <button type="submit" class="btn btn-primary inline-button">Edit this Comment</button>
+        <a href="/blog/{{post_id}}" class="btn btn-danger">Go Back</a>
+      </form>
+  </div>
+{% endblock %}

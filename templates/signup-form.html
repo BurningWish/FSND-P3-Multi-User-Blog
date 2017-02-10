@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Sign Up</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+      <link rel="stylesheet" href="/static/main.css">
+  </head>
+
+  <body>
+    <div class="container">
+    <h2 class="signup-title">Please Signup</h2>
+
+    <form method="POST">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-control" name="username" value="{{username}}" placeholder="Please enter your username">
+        <small class="form-text text-muted error">{{error_username}}</small>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" name="password" value="" placeholder="Please enter your password">
+        <small class="form-text text-muted error">{{error_password}}</small>
+      </div>
+      <div class="form-group">
+        <label>Verify Password</label>
+        <input type="password" class="form-control" name="verify" value="" placeholder="Please enter your password again">
+        <small class="form-text text-muted error">{{error_verify}}</small>
+      </div>
+      <div class="form-group">
+        <label>Email&nbsp;(Optional)</label>
+        <input type="text" class="form-control" name="email" value="{{email}}" placeholder="Please enter your email address">
+        <small class="form-text text-muted error">{{error_email}}</small>
+      </div>
+      <button type="submit" class="btn btn-block btn-primary">Signup as a New User</button>
+    </form>
+
+    <hr class="content-division">
+    <h3 class="signup-title">Already has an account? Please Login</h3>
+    <form action="/login" action="GET">
+      <button type="submit" class="btn btn-block btn-success">Log in to the Blog World</button>
+    </form>
+    <h3 class="signup-title">Alternatively you can still view blogs as a guest</h3>
+    <form action="/blog" action="GET">
+      <button type="submit" class="btn btn-block btn-info">Visit as a Guest</button>
+    </form>
+
+
+    </div>
+  </body>
+
+</html>

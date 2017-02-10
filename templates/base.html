@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+  <link rel="stylesheet" href="/static/main.css">
+
+  <title>Blog World</title>
+</head>
+
+<body>
+  <h1 class="main-title"><i class="fa fa-pencil" aria-hidden="true"></i> Blog World</h1>
+  <div class="login-area">
+    {% if user %}
+      Logged in as&nbsp;{{user.name}}&nbsp;&nbsp;
+      <a class="login-link" href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;logout</a>
+    {% else %}
+      <a class="login-link" href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;login</a>&nbsp;
+      <a class="login-link" href="/signup"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;signup</a>
+    {% endif %}
+  </div>
+  <div id="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+
+</html>
+

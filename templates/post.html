@@ -1,0 +1,10 @@
+<div class="post">
+    <h2>{{p.subject}}</h2>
+
+    <h4>{{p.created.strftime("%b %d, %Y")}}</h4>
+
+    <h3><i class="fa fa-pencil" aria-hidden="true"></i><i>Written by {{p.author}}</i><h3>
+
+    <p>{{p._render_text | safe}}</p>
+
+</div>

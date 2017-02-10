@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="text-center create-post">
+        <a href="/blog/newpost" class="btn btn-lg btn-primary">Create a New Post</a>
+    </div>
+    <div class="out-border">
+        {% for p in posts %}
+        {{p.render() | safe}}
+        <a href = "/blog/{{p.key().id()}}" class = "post-direct btn btn-primary">View Blog Details</a>
+        <hr class="post-division">
+        {% endfor %}
+    </div>
+{% endblock %}

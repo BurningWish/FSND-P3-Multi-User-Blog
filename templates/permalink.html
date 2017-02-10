@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- the post itself to be rendered -->
+    {{post.render() | safe}}
+    <br><br>
+    <a href="/blog" class="btn btn-primary">Return to front page</a>
+    {% if user and user.name != post.author and user.name not in post.like_users %}
+        <form action="/blog/{{post.key().id()}}/like" method="POST">
+            <div class="text-right">
+                <button type="submit" class="btn btn-success">Like this Post</button>
+            </div>
+        </form>
+    {% endif %}
+    {% if user.name in post.like_users %}
+        <form action="/blog/{{post.key().id()}}/unlike" method="POST">
+            <div class="text-right">
+                <button type="submit" class="btn btn-warning">Dislike this Post</button>
+            </div>
+        </form>
+    {% endif %}
+    <h3 class="error">{{vote_error}}</h3>
+
+    {% if user.name == post.author %}
+        <form action="/blog/{{post.key().id()}}/delete" method="POST">
+            <a href="/blog/{{post.key().id()}}/edit" class="btn btn-warning">Edit your Post</a>
+            <button type="submit" class="btn btn-danger">Delete your Post</button>
+        </form>
+    {% endif%}
+    <p class="like-info">{{post.like_count}} user(s) like this post</p>
+    <hr class="post-division">
+    <!-- all the comments associated with the post to be rendered -->
+    <form action="/blog/{{post.key().id()}}/comment/new" method="GET">
+        <button type=submit"" class="btn btn-success">Add New Comment to this Post</button>
+    </form>
+    <br>
+    {% for comment in post.comments.order('-created') %}
+        <div class=comment_user><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{{comment.user_name}}</div>
+        <div class=comment_content>{{comment.text}}</div>
+        <div class=comment_time>{{comment.created.strftime("%b %d, %Y")}}</div>
+        {% if user.name == comment.user_name %}
+            <form action="/blog/{{post.key().id()}}/comment/{{comment.key().id()}}/delete" method="POST">
+                <a href="/blog/{{post.key().id()}}/comment/{{comment.key().id()}}/edit" class="btn btn-xs btn-warning">Edit</a>
+                <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+            </form>
+        {% endif %}
+        <br>
+    {% endfor %}
+{% endblock %}
